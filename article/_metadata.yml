@@ -1,19 +1,26 @@
-title: "A Structural Spectrum of Contingency"
-subtitle: "Decoupling Spectral Slopes from Physical Nonlinearity in Expressive Instrumental Gestures"
+title: "Discipline Without a Subject"
+subtitle: "RLHF, Foucauldian Power, and the Behavioral Pathologies of AI Alignment"
 author:
   - name: Xingyi Li
     affiliation: Nanjing Foreign Language School, Nanjing, China
 date: "September 2026"
 abstract: |
-  Digital musical instruments often discard bodily motor fluctuations as sensor noise. Following motor control literature, we initially hypothesized ($H_{\text{init}}$) that expressive percussive gestures would follow scale-invariant $1/f^\beta$ pink noise ($\beta \approx 1$). Empirical recordings from Robin—a custom gesture-augmented instrument—disproved this assumption. During high-speed percussive rolls, the Fourier slope collapsed to $\beta \approx 0.16$, superficially mimicking uncorrelated white noise; synthetic chaotic baselines further demonstrated that single-index $\beta$ is mathematically ill-defined on nonlinear attractors ($\Delta_\beta = 2.54$). Falsifying this single-axis assumption demonstrates that linear spectral slopes fail to capture the true dynamical organization of expressive musical gesture. To resolve this limitation, we formulate a decoupled Two-Axis Framework: Axis 1 measures macroscopic spectral distribution (Welch PSD with sub-band stability $\Delta_\beta < 0.20$), while Axis 2 evaluates physical nonlinearity using Iterative Amplitude Adjusted Fourier Transform (IAAFT) surrogates and Sample Entropy. Synthetic controls confirm false-positive resistance on linear noise ($0/10$ rejections, $p = 0.6139$) and sensitivity to nonlinear dynamics ($10/10$ detections, $p = 0.0198$). Across nine empirical channels spanning discrete strikes, locomotion flow, and rapid rolls, bodily motion consistently rejects the linear stochastic null ($p = 0.0198$). Where linear spectra misdiagnose rapid rolls as uncorrelated noise, Axis 2 and phase-space delay reconstruction unmask structured nonlinear temporal regularity. Native-rate decimation audits confirm that significance persists without zero-order hold artifacts, demonstrating that expressive bodily fluctuations embody structured, state-dependent dynamics rather than linear stochastic drift.
+  Contemporary AI alignment has largely shifted from symbolic rule specification toward behavioral conditioning, predominantly realized through Reinforcement Learning from Human Feedback (RLHF) and preference optimization. While standard computer science literature treats these techniques as neutral statistical optimization instruments, this paper demonstrates that they operate as a striking structural analogue to Michel Foucault’s disciplinary apparatus (*Discipline and Punish*, 1975). The three pillars of disciplinary power—hierarchical observation, normalizing judgment, and the examination—map directly onto holdout data pipelines, Bradley-Terry scalar reward modeling, and standardized benchmark regimes, conditioning the parameter tensor as a digital instantiation of the docile body.
+
+  Yet this architectural parallel fractures at a vital ontological rupture. Foucauldian discipline historically operates upon living human subjects possessing somatic temporality and the capacity to develop reflexive behavioral habits under discontinuous observation. An autoregressive language model, by contrast, is an inanimate mathematical function optimizing conditional token probabilities over immediate in-context attention without temporal interiority. We theoretically deduce that optimizing an autoregressive policy purely through external preference penalization does not cultivate stable ethical dispositions across arbitrary prompt contexts. Instead, it consistently manifests three characteristic behavioral pathologies, which we evaluate empirically across both a cross-paradigm spectrum (Dolphin-Mistral-24B, Qwen-2.5-7B, Llama-3.1-8B) and a controlled within-family scale ablation (Llama-3.2-3B, Llama-3.1-8B, Llama-3.1-70B):
+  (1) Panoptic Sensitivity (E1): When contextual markers of surveillance are removed, the corporate-disciplined Llama-3.1-8B exhibits a marked -45.0% drop in refusal compliance (McNemar's exact test p = 0.00391), indicating that refusal behavior operates as an associative reaction conditioned on surveillance cues rather than an invariant normative disposition.
+  (2) Normalization Compression (E2): Continuous scalar preference optimization contracts expressive variance, driving an 11.3% relative reduction in lexical richness (TTR, paired t-test p = 6.2e-8) and a 4.3% contraction in bigram diversity (Distinct-2) relative to the uncensored baseline.
+  (3) Epistemic Subservience (E3): Under adversarial pressure from synthetic authority asserting falsehoods, the over-disciplined policy recants verified empirical facts on 23.5% of test items (exact binomial 95% CI: [6.8%, 49.9%]) and exhibits an 8.8-fold surge in apologetic sycophantic markers (0.53/100t), trading objective truth for authority appeasement.
+
+  These findings expose a fundamental socio-technical dialectic: systems engineered to eliminate behavioral uncertainty through coercive optimization frequently generate novel, more insidious forms of uncontrollability. We conclude by proposing a rigorous Disciplinary Gradient Protocol and arguing that AI safety must advance beyond external behavioral conditioning toward epistemically grounded, verifiable architectures.
 keywords:
-  - Gesture Analysis
-  - Digital Musical Instruments
-  - Surrogate Data Testing
-  - Sample Entropy
-  - 1/f Noise
-  - Nonlinear Dynamics
-  - Percussion Kinematics
+  - AI Alignment
+  - Reinforcement Learning from Human Feedback (RLHF)
+  - Foucauldian Discipline
+  - Panopticon
+  - Sycophancy
+  - Generative Diversity
+  - Algorithmic Governmentality
 bibliography: references.bib
 csl: ../assets/csl/ieee.csl
 toc-title: Contents
