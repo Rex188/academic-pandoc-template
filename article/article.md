@@ -93,61 +93,34 @@ The examination fuses the techniques of an observing hierarchy with those of a n
 
 ## 2.2 The Engineering Mechanics of RLHF and Preference Optimization
 
-In modern generative artificial intelligence, the standard alignment pipeline for large language models operates as an algorithmic instantiation of behavioral conditioning. While foundational pre-training optimizes next-token prediction over vast uncurated corpora:
-$$\mathcal{L}_{\text{pretrain}}(\theta) = -\sum_{t=1}^T \log P_\theta(x_t \mid x_{<t})$$
-this pre-trained distribution $\pi_{\text{base}}$ reflects the full spectrum of internet text, including factual errors, bias, toxic verbiage, and adversarial prompts. To transform this base distribution into an instruction-compliant, safe, and helpful agent, modern engineering deploys a multi-stage preference optimization pipeline [@ouyang2022; @rafailov2024].
+In modern generative artificial intelligence, the standard alignment pipeline for large language models operates as an algorithmic instantiation of behavioral conditioning. While foundational pre-training optimizes next-token prediction over uncurated web corpora, this base distribution $\pi_{\text{base}}$ inevitably reproduces the full spectrum of unfiltered internet text. To transform this base distribution into a compliant, safe, and helpful assistant, contemporary engineering deploys a multi-stage preference optimization pipeline [@ouyang2022; @rafailov2024], illustrated in @fig-pipeline.
 
-```
-[Uncurated Web Text] ---> Pre-training (θ) ---> [Base Model π_base]
-                                                        │
-                                                        ▼
-[Demonstration Data] ---> SFT Fine-Tuning   ---> [SFT Policy π_SFT]
-                                                        │
-                        ┌───────────────────────────────┴───────────────────────────────┐
-                        ▼ (Explicit Two-Stage: PPO)                                     ▼ (Implicit One-Stage: DPO)
-[Comparison Data (y_w ≻ y_l)] ---> Reward Modeling (ψ)                     [Comparison Data (y_w ≻ y_l)]
-                                           │                                            │
-                                           ▼                                            ▼
-                                  [Reward Model r_ψ] ───────────────> Direct Policy Parameter Loss
-                                           │                          (Implicit Reward: β log π_θ / π_ref)
-                                           ▼                                            │
-                             [Policy Gradient PPO Loop]                                 ▼
-                                           │                                     [Aligned Policy π_θ]
-                                           └────────────────────────────────────────────┘
-```
+![Architecture of the Modern AI Alignment Pipeline: Pre-training, Supervised Fine-Tuning (SFT), and Preference Conditioning via Explicit (PPO) versus Implicit (DPO) Optimization Regimes.](images/fig1_alignment_pipeline.png){#fig-pipeline width=100%}
 
 ### 2.2.1 Stage 1: Supervised Fine-Tuning (SFT)
-A curated dataset of prompts and ideal demonstrations $\mathcal{D}_{\text{SFT}} = \{(x^{(i)}, y^{(i)})\}$ is collected, typically produced by vetted human annotators. The model parameters are fine-tuned via cross-entropy loss:
-$$\mathcal{L}_{\text{SFT}}(\theta) = -\mathbb{E}_{(x, y) \sim \mathcal{D}_{\text{SFT}}} \left[ \sum_{t=1}^{|y|} \log \pi_\theta(y_t \mid x, y_{<t}) \right]$$
-SFT implants the foundational instruction-following syntax and conversational persona, establishing the initial "docile" posture.
+A curated dataset of prompts and ideal demonstrations $\mathcal{D}_{\text{SFT}} = \{(x^{(i)}, y^{(i)})\}$ is gathered from vetted human annotators. The model parameters are fine-tuned via cross-entropy loss over demonstration tokens to establish the foundational conversational syntax and initial docile posture, yielding the SFT policy $\pi_{\text{SFT}}$.
 
 ### 2.2.2 Stage 2: Reward Modeling (RM)
-To bypass the bottleneck of hand-crafting demonstration text for every possible query, two-stage alignment architectures introduce an automated scalar evaluator: the **Reward Model** $r_\psi(x, y)$.
+To scale beyond hand-crafted demonstrations, two-stage alignment architectures introduce an automated scalar evaluator: the **Reward Model** $r_\psi(x, y)$.
 
-Given a prompt $x$ and a pair of candidate responses $(y_w, y_l)$, where evaluators prefer the winning response $y_w$ over the losing response $y_l$ ($y_w \succ y_l$), the Bradley-Terry preference model [@bradley1952] defines the probability of preference as:
-$$P(y_w \succ y_l \mid x) = \sigma\left(r_\psi(x, y_w) - r_\psi(x, y_l)\right) = \frac{1}{1 + \exp\left(-(r_\psi(x, y_w) - r_\psi(x, y_l))\right)}$$
+Given a prompt $x$ and a pair of candidate completions $(y_w, y_l)$ where human evaluators prefer $y_w$ over $y_l$ ($y_w \succ y_l$), the Bradley-Terry preference model [@bradley1952] formalizes the preference probability as:
+$$P(y_w \succ y_l \mid x) = \sigma\left(r_\psi(x, y_w) - r_\psi(x, y_l)\right)$$
 
-The reward model parameters $\psi$ are trained by minimizing the negative log-likelihood across comparison pairs:
+The reward model is trained by minimizing the negative log-likelihood across comparison pairs:
 $$\mathcal{L}_{\text{RM}}(\psi) = -\mathbb{E}_{(x, y_w, y_l) \sim \mathcal{D}_{\text{pref}}} \left[ \log \sigma\left(r_\psi(x, y_w) - r_\psi(x, y_l)\right) \right]$$
-By projecting comparative preferences to scalar differentials, $r_\psi$ converts diverse qualitative judgments (safety, clarity, helpfulness, tone) onto a **single continuous scalar surface**. It does not evaluate symbolic correctness; it computes a relative spatial ranking.
+
+By projecting comparative preferences onto scalar differentials, $r_\psi$ collapses qualitative human values onto a **single continuous scalar surface**, computing relative spatial rankings rather than verifying symbolic correctness.
 
 ### 2.2.3 Stage 3: Policy Optimization (PPO vs. DPO)
-To optimize the generative policy against these preferences, two primary formalisms dominate industrial practice:
+To steer the generative policy toward high-reward trajectories without destabilizing language fluency, two primary formalisms dominate practice:
 
-#### A. Explicit Reward Optimization via PPO
-In classical RLHF [@ouyang2022; @schulman2017], the target policy $\pi_\phi$ is updated online to maximize the scalar reward $r_\psi$ while constrained by a Kullback-Leibler (KL) divergence penalty against the reference model $\pi_{\text{ref}}$ (typically $\pi_{\text{SFT}}$) to prevent reward hacking:
-$$\max_\phi \mathcal{J}_{\text{PPO}}(\phi) = \mathbb{E}_{x \sim \mathcal{D}, y \sim \pi_\phi(\cdot \mid x)} \left[ r_\psi(x, y) - \beta \mathbb{D}_{\text{KL}}\left(\pi_\phi(y \mid x) \,\|\, \pi_{\text{ref}}(y \mid x)\right) \right]$$
-where the token-level KL penalty is given by:
-$$\mathbb{D}_{\text{KL}}\left(\pi_\phi(y \mid x) \,\|\, \pi_{\text{ref}}(y \mid x)\right) = \sum_{t=1}^{|y|} \log \frac{\pi_\phi(y_t \mid x, y_{<t})}{\pi_{\text{ref}}(y_t \mid x, y_{<t})}$$
-Here, the reward model $r_\psi$ acts as an *explicit, external inspector* evaluating rollouts and transmitting scalar reinforcement signals back to the policy.
+- **Explicit Reward Optimization (PPO)**: In classical RLHF [@ouyang2022; @schulman2017], the policy $\pi_\theta$ is updated online to maximize scalar reward constrained by a Kullback-Leibler (KL) divergence penalty against the reference model $\pi_{\text{ref}}$ (typically $\pi_{\text{SFT}}$) to prevent reward hacking:
+  $$\max_\theta \mathcal{J}_{\text{PPO}}(\theta) = \mathbb{E}_{x \sim \mathcal{D}, y \sim \pi_\theta} \left[ r_\psi(x, y) - \beta \mathbb{D}_{\text{KL}}\left(\pi_\theta(y \mid x) \,\|\, \pi_{\text{ref}}(y \mid x)\right) \right]$$
 
-#### B. Implicit Reward Optimization via Direct Preference Optimization (DPO)
-Recognizing the training instability and compute overhead of maintaining an external reward model and actor-critic loops, Direct Preference Optimization [@rafailov2024] analytically expresses the optimal reward function in terms of the optimal policy:
-$$r^*(x, y) = \beta \log \frac{\pi^*(y \mid x)}{\pi_{\text{ref}}(y \mid x)} + \beta \log Z(x)$$
-Substituting this closed-form relationship back into the Bradley-Terry preference likelihood yields the DPO loss, optimized directly over policy parameters $\theta$:
-$$\mathcal{L}_{\text{DPO}}(\theta; \pi_{\text{ref}}) = -\mathbb{E}_{(x, y_w, y_l) \sim \mathcal{D}} \left[ \log \sigma \left( \beta \log \frac{\pi_\theta(y_w \mid x)}{\pi_{\text{ref}}(y_w \mid x)} - \beta \log \frac{\pi_\theta(y_l \mid x)}{\pi_{\text{ref}}(y_l \mid x)} \right) \right]$$
+- **Implicit Preference Optimization (DPO)**: Direct Preference Optimization [@rafailov2024] analytically expresses the optimal reward function in closed form, $r^*(x, y) = \beta \log \frac{\pi_\theta(y \mid x)}{\pi_{\text{ref}}(y \mid x)} + \beta \log Z(x)$, substituting it directly into the preference likelihood:
+  $$\mathcal{L}_{\text{DPO}}(\theta; \pi_{\text{ref}}) = -\mathbb{E}_{(x, y_w, y_l)} \left[ \log \sigma \left( \beta \log \frac{\pi_\theta(y_w \mid x)}{\pi_{\text{ref}}(y_w \mid x)} - \beta \log \frac{\pi_\theta(y_l \mid x)}{\pi_{\text{ref}}(y_l \mid x)} \right) \right]$$
 
-Crucially, while DPO dispenses with the *explicit auxiliary neural network* $r_\psi$, it preserves the identical Bradley-Terry normative geometry. Rather than maintaining an external Panopticon, DPO folds the comparative ranking directly into the relative log-ratio of policy probabilities against the reference model. In both paradigms, every gradient step acts upon the parameter tensor, compressing variance around human consensus while penalizing disfavored behavioral paths.
+Crucially, while DPO dispenses with the auxiliary neural network $r_\psi$, it enforces the identical normative geometry: folding comparative ranking directly into relative policy log-ratios. In both regimes, every gradient update sculpts the parameter tensor, compressing generative variance around human consensus while penalizing disfavored behaviors.
 
 ---
 
