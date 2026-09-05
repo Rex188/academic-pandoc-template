@@ -1,6 +1,10 @@
 name: Render Quarto
 
-on: [workflow_dispatch, pull_request]
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  pull_request:
 
 permissions:
   contents: read
@@ -29,3 +33,13 @@ jobs:
         run: npm run check
       - name: Render Quarto artifacts
         run: npm run render
+      - name: Upload Paper Outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: paper-outputs
+          path: |
+            article/article.pdf
+            article/article.docx
+            article/article.html
+            article/article.tex
+

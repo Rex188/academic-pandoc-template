@@ -12,7 +12,7 @@
 		"preview:article": "quarto preview article",
 		"preview:presentation": "quarto preview presentation",
 		"preview:thesis": "quarto preview thesis",
-		"render": "npm run render:docs && npm run render:article && npm run render:presentation && npm run render:thesis",
+		"render": "npm run render:article && npm run render:presentation && npm run render:thesis && npm run render:docs",
 		"render:docs": "quarto render .",
 		"render:article": "quarto render article",
 		"render:article:html": "quarto render article --to html",

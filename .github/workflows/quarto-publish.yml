@@ -63,6 +63,21 @@ jobs:
       - name: Render Quarto Project
         run: npm run render
 
+      - name: Copy Rendered Article to Site
+        run: |
+          mkdir -p _site/article
+          cp article/article.* _site/article/ 2>/dev/null || true
+
+      - name: Upload Paper Outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: paper-outputs
+          path: |
+            article/article.pdf
+            article/article.docx
+            article/article.html
+            article/article.tex
+
       - name: Upload Built Artifacts
         uses: actions/upload-artifact@v7
         with:
