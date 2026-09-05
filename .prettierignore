@@ -9,3 +9,5 @@ _layouts/default.html
 *.tex
 package-lock.json
 article/
+.github/
+package.json
