@@ -1,26 +1,21 @@
-title: Title
-subtitle: Subtitle
+title: "A Structural Spectrum of Contingency"
+subtitle: "Decoupling Spectral Color from Nonlinear Determinism in Expressive Instrumental Gestures"
 author:
-  - Eleanor Roosevelt
-  - John Peters Humphrey
-date: 1 January 2023
-abstract: All human beings are born free and equal in dignity and rights. All human beings are born free and equal in dignity and rights. All human beings are born free and equal in dignity and rights. All human beings are born free and equal in dignity and rights.
+  - name: Xingyi Li
+    affiliation: Nanjing Foreign Language School, Nanjing, China
+date: September 2026
+abstract: |
+  In digital musical instruments, bodily motor variability is frequently dismissed as unstructured sensor noise. Although physiological signals commonly exhibit $1/f^\beta$ power-law scaling, linear spectral indicators—such as the Fourier slope $\beta$—cannot separate low-dimensional deterministic dynamics from linearly filtered Gaussian noise, breaking down entirely during chaotic or high-frequency gestures. We resolve this limitation by introducing a Two-Axis Framework that decouples macroscopic spectral decay from higher-order nonlinear structure. Evaluated on primary three-axis inertial streams from Robin—a custom gesture-augmented instrument—across three percussion regimes (impulsive strikes, locomotion flow, and rapid orchestral rolls), the pipeline couples Welch spectral stability ($\Delta_\beta < 0.20$, Axis 1) with an Iterative Amplitude Adjusted Fourier Transform (IAAFT) surrogate engine using Sample Entropy as the discriminating statistic (Axis 2). Synthetic controls confirm rigorous false-positive resistance on PRNG noise ($p = 0.6139$, $0/10$ rejections) and $100\%$ detection power on chaotic dynamics ($p = 0.0198$, $10/10$ rejections). Across all spatial axes and performance regimes, bodily motion decisively rejects the linear stochastic null ($p < 0.02$, the 100-surrogate rank floor). Crucially, rapid rolls flatten linear spectra to near-white levels ($\beta \approx 0.16$), yet Axis 2 unmasks their deterministic neuromuscular coordination. Native-rate decimation audits confirm that significance persists independent of digital zero-order hold artifacts, establishing that expressive musical gestures embody deterministic nonlinear manifolds rather than stochastic drift.
+keywords:
+  - Gesture Analysis
+  - Digital Musical Instruments
+  - Surrogate Data Testing
+  - Sample Entropy
+  - 1/f Noise
+  - Nonlinear Dynamics
+  - Percussion Kinematics
 bibliography: references.bib
-csl: ../assets/csl/chicago-note-bibliography.csl
-nocite: |
-  @brown2016
-references:
-  - id: unitednations1948
-    author:
-      - literal: United Nations
-    citation-key: unitednations1948
-    issued:
-      - year: 1948
-        month: 12
-    title: Universal Declaration of Human Rights
-    type: book
-keywords: [keyword1, keyword2]
+csl: ../assets/csl/chicago-author-date.csl
 toc-title: Contents
 toc-depth: 2
 abstract-title: Abstract
-thanks: Many thanks for the valuable comments.
