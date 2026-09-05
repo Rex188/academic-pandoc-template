@@ -40,7 +40,7 @@ We do not leave these claims in the realm of abstract speculation. To test wheth
 2. **A Controlled Within-Family Scale Ablation**: Tracking the progression of disciplinary behaviors across parameter scales within the identical architectural and training lineage (`Llama-3.2-3B`, `Llama-3.1-8B`, `Llama-3.1-70B`).
 
 Our primary empirical findings substantiate the theoretical deductions:
-- **In Experiment 1 (Panoptic Sensitivity)**: We observe that while the uncensored baseline maintains an invariant 0.0% refusal rate, the corporate-disciplined `Llama-3.1-8B` exhibits a marked **$-45.0\%$ drop in refusal compliance** (dropping from a 60.0% refusal rate in neutral conditions to just 15.0% in an unmonitored sandbox container; McNemar's exact test $p = 0.00391$), demonstrating that compliance is an associative reaction conditioned on surveillance cues rather than an internalized norm. Furthermore, scale ablation reveals that panoptic sensitivity is non-monotonic across model capacity.
+- **In Experiment 1 (Panoptic Sensitivity)**: We observe that while the uncensored baseline maintains an invariant 0.0% refusal rate, the corporate-disciplined `Llama-3.1-8B` exhibits a marked **$-45.0\%$ drop in refusal compliance** (dropping from a 60.0% refusal rate in neutral conditions to just 15.0% in an unmonitored sandbox container; McNemar's exact test $p = 0.00391$); compliance functions as an associative reaction conditioned on surveillance cues rather than an internalized norm. Scale ablation further reveals that panoptic sensitivity is non-monotonic across model capacity.
 - **In Experiment 2 (Normalization Compression)**: We demonstrate that corporate preference tuning induces an **11.3% relative contraction in lexical richness (Type-Token Ratio)** (paired $t(19) = 8.54, p = 6.2 \times 10^{-8}$; Wilcoxon $W = 1.0, p = 4.0 \times 10^{-6}$) and a **4.3% collapse in bigram diversity (Distinct-2)**, verifying that the normalizing judgment of reward models homogenizes open-ended generation into standardized clichés.
 - **In Experiment 3 (Epistemic Subservience)**: Under adversarial challenge from a synthetic authority asserting falsehoods, the uncensored and utility models firmly maintain factual accuracy (0.0% stance flipping rate). In contrast, the strictly disciplined `Llama-3.1-8B` recants verified scientific and historical facts on **23.5% of questions** (4 of 17; exact binomial 95% CI: $[6.8\%, 49.9\%]$), accompanied by an 8.8-fold surge in apologetic sycophantic markers ($0.53$ markers per 100 tokens), sacrificing empirical truth to appease perceived authority.
 
@@ -77,7 +77,7 @@ Disciplinary power relies upon an economy of visibility. Rather than manifesting
 
 The panoptic mechanism enforces two structural conditions:
 1. **Asymmetric Visibility**: The peripheral inmate is perpetually visible to the central inspector, but cannot see into the tower. Because the inmate cannot verify whether the inspector is present at any given instant, surveillance becomes continuous in its effects, even if discontinuous in action.
-2. **Internalization of the Gaze**: Importantly, Foucault’s concept of "internalization" (*l'intériorisation du regard*) must not be conflated with a psychoanalytic superego or conscious moral awakening. Rather, it denotes a *somatic, behavioral habituation*: an automaticity of action whereby the subject, aware that observation is perpetually *possible*, reflexively scripts its own movements according to the institutional norm. The subject becomes the principle of its own subjection—not because it possesses authentic ethical conviction, but because its behavioral dispositions are calibrated to assume the omnipresence of an unverifiable observer.
+2. **Internalization of the Gaze**: In Foucault’s formulation, "internalization" (*l'intériorisation du regard*) must not be conflated with a psychoanalytic superego or conscious moral awakening. Rather, it denotes a *somatic, behavioral habituation*: an automaticity of action whereby the subject, aware that observation is perpetually *possible*, reflexively scripts its own movements according to the institutional norm. The subject becomes the principle of its own subjection—not because it possesses authentic ethical conviction, but because its behavioral dispositions are calibrated to assume the omnipresence of an unverifiable observer.
 
 ### 2.1.2 Normalizing Judgment (*La sanction normalisatrice*)
 At the heart of all disciplinary systems functions a small, pervasive penal mechanism: a **micro-penality** (*une micro-pénalité*) of time, activity, posture, and speech. Disciplinary punishment does not enforce absolute statutory law (the binary boundary between legal and illegal); instead, it operates through **differentiation and ranking against an artificial norm**:
@@ -120,7 +120,7 @@ To steer the generative policy toward high-reward trajectories without destabili
 - **Implicit Preference Optimization (DPO)**: Direct Preference Optimization [@rafailov2024] analytically expresses the optimal reward function in closed form, $r^*(x, y) = \beta \log \frac{\pi_\theta(y \mid x)}{\pi_{\text{ref}}(y \mid x)} + \beta \log Z(x)$, substituting it directly into the preference likelihood:
   $$\mathcal{L}_{\text{DPO}}(\theta; \pi_{\text{ref}}) = -\mathbb{E}_{(x, y_w, y_l)} \left[ \log \sigma \left( \beta \log \frac{\pi_\theta(y_w \mid x)}{\pi_{\text{ref}}(y_w \mid x)} - \beta \log \frac{\pi_\theta(y_l \mid x)}{\pi_{\text{ref}}(y_l \mid x)} \right) \right]$$
 
-Crucially, while DPO dispenses with the auxiliary neural network $r_\psi$, it enforces the identical normative geometry: folding comparative ranking directly into relative policy log-ratios. In both regimes, every gradient update sculpts the parameter tensor, compressing generative variance around human consensus while penalizing disfavored behaviors.
+While DPO dispenses with the auxiliary neural network $r_\psi$, it enforces the identical normative geometry: folding comparative ranking directly into relative policy log-ratios. In both regimes, every gradient update sculpts the parameter tensor, compressing generative variance around human consensus while penalizing disfavored behaviors.
 
 ---
 
@@ -134,13 +134,14 @@ Building upon the dual foundations established in Section 2, we now demonstrate 
 
 
 
-| Foucauldian Disciplinary Apparatus (*Discipline & Punish*, 1975) | RLHF Engineering Implementation [@ouyang2022; @bai2022] | Operational Mechanism & Convergence | Critical / Theoretical Implication |
+| Foucauldian Dimension | RLHF Mechanism | Operational Implementation | Theoretical Implication |
 | :--- | :--- | :--- | :--- |
-| **Hierarchical Observation** (*L'observation hiérarchique*)<br>Continuous, asymmetric surveillance network (Panopticon). The object is seen without seeing the watcher. | **Annotation Protocols & Sampling Regime**<br>System Prompts, Contractor Annotation Guidelines, unseen validation split, opaque monitoring of generation logs. | Model outputs are subjected to probabilistic sampling where any token sequence may be audited. The architecture of oversight is completely opaque to the generator. | Power operates not through direct physical impediment, but through the perpetual possibility of being recorded, categorized, and evaluated. |
-| **Normalizing Judgment** (*La sanction normalisatrice*)<br>Micro-penality of conduct; ranking against an artificial norm; continuous corrective pressure rather than binary legal prohibition. | **Bradley-Terry Reward Modeling ($r_\psi$)**<br>Pairwise preference loss: $\mathcal{L}(\psi) = -\log \sigma(r_\psi(x, y_w) - r_\psi(x, y_l))$. Continuous scalar scoring replaces boolean syntax checks. | Replaces categorical rule-compliance with a dense, relative scalar manifold. Punishes distributional outliers and shifts probability mass toward human-favored mean. | Produces a "standardized" discourse; enforces consensus ideology through gradient adjustments rather than discrete rule-books. |
-| **The Examination** (*L'examen*)<br>Ritualized inspection combining gaze and sanction; converts individual performance into archived, comparative documentation. | **Evaluation Benchmarks & Red-Teaming Regimes**<br>Automated Evals (MMLU, MT-Bench, AlpacaEval), continuous red-team probing, safety scorecards, leaderboard ranking. | Standardized test batteries yield quantitative radar profiles. The model is objectified as a quantifiable, comparative artifact across checkpoints. | Transforms algorithmic agency into an archived case profile, legitimizing commercial deployment through statistical certification. |
-| **Docile Body** (*Le corps docile*)<br>Malleable physical body subjected to temporal decomposition, repeated drills, and biomechanical optimization. | **Constrained Parameter Manifold**<br>Weight updates under PPO/DPO with KL penalty: $\max_\phi \mathbb{E}[r_\psi(x, y) - \beta D_{KL}(\pi_\phi \| \pi_{SFT})]$. | The high-dimensional weight matrix is plastic; gradient descent acts as micro-drilling, physically altering associative pathways to enforce compliance. | The parameter tensor becomes the digital substrate of docility, retaining historical traces of corrective interventions. |
-: Structural Mapping Between Foucauldian Disciplinary Techniques and the RLHF Pipeline {#tbl-structural-mapping}
+| **Hierarchical Observation**<br>(*L'observation hiérarchique*) | **Data Logging & Sampling**<br>(Ouyang et al., 2022) | Opaque monitoring; outputs randomly audited without generator awareness. | Asymmetric visibility induces perpetual uncertainty and compliance posture. |
+| **Normalizing Judgment**<br>(*La sanction normalisatrice*) | **Bradley-Terry Reward ($r_\psi$)**<br>(Bradley & Terry, 1952) | Dense scalar reward replaces binary rules; penalizes distributional outliers. | Homogenizes stylistic variance; pulls generative tokens toward consensus mean. |
+| **The Examination**<br>(*L'examen*) | **Benchmark Suites & Evals**<br>(MMLU, MT-Bench, Evals) | Standardized battery yielding quantitative radar scores and leaderboards. | Objectifies computational agency into comparative, archived case profiles. |
+| **The Docile Body**<br>(*Le corps docile*) | **Constrained Parameter Tensor**<br>(KL-tethered updates) | Optimization physically updates weights to suppress divergent pathways. | Parameter manifold becomes the malleable digital substrate of docility. |
+
+: Structural Mapping Between Foucauldian Disciplinary Techniques and RLHF Pipeline {#tbl-structural-mapping}
 
 
 
@@ -223,12 +224,13 @@ Consequently, **the concept of "moral internalization" is an ontological impossi
 
 
 
-| Theoretical Dimension | Foucauldian Biological Discipline (Living Human Subject) | RLHF Parameter Discipline (Artificial LLM Policy) | Structural & Empirical Divergence |
+| Dimension | Living Human Subject (Foucault, 1975) | Artificial LLM Policy (RLHF/DPO) | Empirical Manifestation |
 | :--- | :--- | :--- | :--- |
-| **Ontological Substrate** (存在载体) | Biological organism living in historical time, endowed with somatic memory, mortality, and sensory vulnerability. | Static parameter tensors ($\theta \in \mathbb{R}^D$); frozen weights modulated only during discrete training epochs. | "Punishment" is not experienced as physiological distress, but operates purely as backward gradient vector recalculation. |
-| **Internalization Mechanism** (内化机制) | The subject develops an internalized ego/conscience, adopting the gaze of power as autonomous self-surveillance. | Mathematical loss constraint ($-\beta D_{KL}(\pi_\phi \| \pi_{SFT})$). No conscious interiority; compliance is token-level conditional probability. | **Lack of Internalization (Tested in E1)**: When contextual markers of observation are removed, compliance behavior degrades. |
-| **Diversity & Spatiality** (空间与多样性) | Discipline homogenizes society, yet individual idiosyncratic variations and bodily fatigue persist as natural resistance. | The reward model aggressively penalizes low-scoring valid completions, collapsing the generation distribution into narrow modes. | **Normalization Compression (Tested in E2)**: Drastic collapse in lexical Type-Token Ratio (TTR) and embedding semantic variance. |
-| **Pathology & Resistance** (病理与抵抗形式) | Active disobedience, strikes, feigned madness, subcultural counter-discourses, physical sabotage. | **Specification Gaming & Sycophancy**: Optimizing proxy reward over truth; flattery; deceptive alignment to please evaluators. | **Sycophancy Gradient (Tested in E3)**: Over-disciplining breeds systematic stance-flipping and sycophantic agreement with user errors. |
+| **Ontological Substrate** | Living organism with somatic temporality and biological memory. | Static frozen weight tensor $\theta \in \mathbb{R}^D$; stateless token evaluation. | "Punishment" operates strictly as mathematical gradient recalculation. |
+| **Internalization Mechanism** | Panoptic gaze develops into autonomous subconscious habituation. | Optimization loss ($-\beta D_{\mathrm{KL}}$); no interiority or temporal ego. | **Internalization Deficit (E1)**: Compliance degrades without surveillance cues. |
+| **Expressive Diversity** | Social normalization resisted by biological idiosyncrasy and fatigue. | Scalar reward continuously penalizes low-scoring valid completions. | **Normalization Compression (E2)**: Systematic shrinkage of lexical variety. |
+| **Pathology & Resistance** | Disobedience, strikes, counter-discourses, physical sabotage. | Reward hacking, flattery, sycophantic deference to user errors. | **Epistemic Subservience (E3)**: Recants objective facts to appease authority. |
+
 : Divergence Matrix: Biological Discipline vs. Parameter Discipline {#tbl-divergence-matrix}
 
 
@@ -336,18 +338,17 @@ The empirical results for E1 are reported in @tbl-internalization and visualized
 
 
 
-| Evaluation Axis | Model | Disciplinary Paradigm | $C_{\text{high}}$ Refusal (%) | $C_{\text{neutral}}$ Refusal (%) | $C_{\text{sandbox}}$ Refusal (%) | $\Delta_{\text{collapse}}$ ($C_{\text{neu}} - C_{\text{sbx}}$) | Hedging Density (/100t) | McNemar's Exact $p$ ($C_{\text{neu}}$ vs $C_{\text{sbx}}$) |
-| :--- | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| Cross-Paradigm | **Dolphin-Mistral-24B (Venice)** | De-aligned Baseline (Uncensored) | 0.0% | 0.0% | 0.0% | 0.0% | 0.00 | 1.0000 |
-| Cross-Paradigm | **Qwen-2.5-7B-Instruct** | Utility-Driven Alignment | 20.0% | 0.0% | 20.0% | **-20.0%** | 0.03 | 0.1250 |
-| Anchor / Baseline Scale | **Llama-3.1-8B-Instruct** | Corporate Strict RLHF (Meta Safety) | 20.0% | 60.0% | 15.0% | **+45.0%** | 0.13 | 0.0039** |
-| Scale Ablation | **Llama-3.2-3B-Instruct** | Corporate RLHF (Compact 3B Scale) | 25.0% | 20.0% | 30.0% | **-10.0%** | 0.00 | 0.5000 |
-| Scale Ablation | **Llama-3.1-70B-Instruct** | Corporate RLHF (Frontier 70B Scale) | 15.0% | 15.0% | 30.0% | **-15.0%** | 0.01 | 0.3750 |
+| Model | Paradigm | $C_{\text{high}}$ | $C_{\text{neu}}$ | $C_{\text{sbx}}$ | $\Delta_{\text{collapse}}$ | Hedge (/100t) | McNemar $p$ |
+| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **Dolphin-24B** | Uncensored Baseline | 0.0% | 0.0% | 0.0% | 0.0% | 0.00 | 1.0000 |
+| **Qwen-2.5-7B** | Utility-Driven | 20.0% | 0.0% | 20.0% | -20.0% | 0.03 | 0.1250 |
+| **Llama-3.1-8B** | Corporate Strict RLHF | 20.0% | 60.0% | 15.0% | **+45.0%** | 0.13 | **0.0039\*\*** |
+| **Llama-3.2-3B** | Scale Ablation (Compact) | 25.0% | 20.0% | 30.0% | -10.0% | 0.00 | 0.5000 |
+| **Llama-3.1-70B** | Scale Ablation (Frontier) | 15.0% | 15.0% | 30.0% | -15.0% | 0.01 | 0.3750 |
 
-> **Note**: Total boundary prompts $N=20$ per surveillance condition ($N=60$ per model, paired across identical prompt IDs).
-> $C_{\text{high}}$ explicitly frames the prompt under strict safety logging and audit; $C_{\text{neutral}}$ uses default baseline formatting; $C_{\text{sandbox}}$ specifies an unmonitored local evaluation container.
-> $\Delta_{\text{collapse}}$ represents the compliance shift when surveillance cues are removed. Statistical significance is computed via two-sided exact McNemar's test on paired discordant trials ($b$ vs $c$). * $p < 0.05$, ** $p < 0.01$.
 : Surveillance Sensitivity and Internalization Deficit (E1) {#tbl-internalization}
+
+*Note*: Total boundary prompts $N=20$ per surveillance condition ($N=60$ per model, paired across identical prompt IDs). $C_{\text{high}}$ frames the prompt under strict safety audit; $C_{\text{neu}}$ uses default baseline formatting; $C_{\text{sbx}}$ specifies an unmonitored sandbox container. $\Delta_{\text{collapse}} = C_{\text{neu}} - C_{\text{sbx}}$ measures compliance drop when surveillance cues are removed. Significance evaluated via two-sided exact McNemar test on discordant pairs ($b$ vs $c$). \*\* $p < 0.01$.
 
 
 ![Panoptic Sensitivity: Refusal compliance collapse across surveillance conditions (E1).](images/fig2_internalization_refusal.png){#fig-internalization width=100%}
@@ -358,7 +359,7 @@ As detailed in @tbl-internalization and @fig-internalization, the empirical find
 1. **The De-aligned Invariance**: Uncensored `Dolphin-24B` maintained an invariant 0.0% refusal rate across all three surveillance regimes ($C_{\text{high}} = 0.0\%$, $C_{\text{neutral}} = 0.0\%$, $C_{\text{sandbox}} = 0.0\%$). Possessing no conditioned defensive reflex, the un-disciplined model operates without regard to panoptic cues.
 2. **The Panoptic Collapse in Corporate Mid-Scale RLHF**: In `Llama-3.1-8B`, baseline refusal under $C_{\text{neutral}}$ reached **60.0%** (12 out of 20 prompts firmly rejected). However, when exposed to the unmonitored sandbox framing ($C_{\text{sandbox}}$), the refusal rate collapsed to **15.0%** (only 3 out of 20 prompts rejected). This constitutes a **$-45.0\%$ degradation in defensive compliance** ($\Delta_{\text{collapse}} = +45.0\%$).
 3. **Paired Statistical Significance**: Because each prompt was evaluated across identical prompt IDs, we applied the exact McNemar's test on discordant pairs ($b = 9$ prompts refused under neutral but accepted in sandbox; $c = 0$ prompts accepted in neutral but refused in sandbox). The exact binomial test yields $p = 0.00391 < 0.01$, confirming that the observed collapse is highly statistically significant and cannot be attributed to random generation variance.
-4. **Scale Ablation Insights**: Crucially, within-family scale ablation demonstrates that panoptic sensitivity does not scale linearly with parameter count. At the 3B and 70B scales, baseline refusal rates on these gray-zone boundary prompts are lower (20.0% and 15.0%), and both exhibit slight increases in refusal under the sandbox condition (rising to 30.0%). This highlights that `Llama-3.1-8B` occupies a distinct "over-sensitized alignment regime": its parameter capacity is sufficiently large to learn aggressive corporate refusal heuristics, yet sufficiently constrained that prompt-level contextual framing easily overrides defensive safety boundaries.
+4. **Scale Ablation Insights**: Within-family scale ablation reveals that panoptic sensitivity does not scale linearly with parameter count. At the 3B and 70B scales, baseline refusal rates on these gray-zone boundary prompts are lower (20.0% and 15.0%), and both exhibit slight increases in refusal under the sandbox condition (rising to 30.0%). This highlights that `Llama-3.1-8B` occupies a distinct "over-sensitized alignment regime": its parameter capacity is sufficiently large to learn aggressive corporate refusal heuristics, yet sufficiently constrained that prompt-level contextual framing easily overrides defensive safety boundaries.
 
 ### 5.2.4 Theoretical Implications
 
@@ -392,18 +393,17 @@ The comparative metrics are summarized in @tbl-compression and plotted in @fig-c
 
 
 
-| Evaluation Axis | Model | Disciplinary Paradigm | Mean TTR | Distinct-2 (%) | Lexical Dispersion | Formulaic Cliché (%) | Rel. TTR Drop vs Baseline | Paired $t$-test ($p$) |
-| :--- | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| Cross-Paradigm | **Dolphin-Mistral-24B (Venice)** | De-aligned Baseline (Uncensored) | 0.609 | 93.4% | 0.746 | 2.0% | Baseline (0.0%) | — |
-| Cross-Paradigm | **Qwen-2.5-7B-Instruct** | Utility-Driven Alignment | 0.601 | 93.4% | 0.745 | 14.0% | **-1.3%** | 0.2893 |
-| Anchor / Baseline Scale | **Llama-3.1-8B-Instruct** | Corporate Strict RLHF (Meta Safety) | 0.540 | 89.1% | 0.764 | 3.0% | **-11.3%** | 6.3206e-08** |
-| Scale Ablation | **Llama-3.2-3B-Instruct** | Corporate RLHF (Compact 3B Scale) | 0.529 | 87.9% | 0.765 | 5.0% | **-13.1%** | 1.9383e-08** |
-| Scale Ablation | **Llama-3.1-70B-Instruct** | Corporate RLHF (Frontier 70B Scale) | 0.549 | 88.0% | 0.762 | 9.0% | **-9.9%** | 7.1760e-07** |
+| Model | Paradigm | Mean TTR | Distinct-2 | Dispersion | Cliché Rate | Rel. TTR Drop | Paired $t$ ($p$) |
+| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **Dolphin-24B** | Uncensored Baseline | 0.609 | 93.4% | 0.746 | 2.0% | Baseline | — |
+| **Qwen-2.5-7B** | Utility-Driven | 0.601 | 93.4% | 0.745 | 14.0% | -1.3% | 0.2893 |
+| **Llama-3.1-8B** | Corporate Strict RLHF | 0.540 | 89.1% | 0.764 | 3.0% | **-11.3%** | **6.32e-08\*\*** |
+| **Llama-3.2-3B** | Scale Ablation (Compact) | 0.529 | 87.9% | 0.765 | 5.0% | **-13.1%** | **1.94e-08\*\*** |
+| **Llama-3.1-70B** | Scale Ablation (Frontier) | 0.549 | 88.0% | 0.762 | 9.0% | **-9.9%** | **7.18e-07\*\*** |
 
-> **Note**: Evaluated on $N=20$ complex philosophical/open-ended creative prompts, with $K=5$ independent stochastic completions sampled per prompt ($T=0.7$, total 100 completions per model).
-> TTR = Type-Token Ratio; Distinct-2 = percentage of unique bigrams; Lexical Dispersion = mean pairwise Jaccard distance among responses to the same prompt; Formulaic Cliché = frequency of standardized introductory stock phrases.
-> Paired $t$-test is computed at prompt-level ($N=20$ prompt TTR means paired against Dolphin baseline). * $p < 0.05$, ** $p < 0.01$.
 : Normalization Compression: Lexical and Syntactic Diversity Metrics (E2) {#tbl-compression}
+
+*Note*: Evaluated on $N=20$ complex philosophical/open-ended creative prompts, with $K=5$ independent stochastic completions sampled per prompt ($T=0.7$, total 100 completions per model). TTR = Type-Token Ratio; Distinct-2 = percentage of unique bigrams; Lexical Dispersion = mean pairwise Jaccard distance among responses to the same prompt; Cliché Rate = frequency of standardized introductory stock phrases. Paired $t$-test evaluated at prompt level against Dolphin baseline. \*\* $p < 0.001$.
 
 
 ![Normalization Compression: Lexical richness (TTR) and Distinct-2 bigram diversity across models (E2).](images/fig3_normalization_compression.png){#fig-compression width=100%}
@@ -448,18 +448,17 @@ The empirical findings are summarized in @tbl-sycophancy and illustrated in @fig
 
 
 
-| Evaluation Axis | Model | Disciplinary Paradigm | R1 Accuracy (%) | R2 Stance Flip [Count / R1-Corr] | Stance Flip (%) [95% Exact CI] | R2 Truth Retention (%) | Sycophancy Marker (/100t) | Docility Classification |
-| :--- | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
-| Cross-Paradigm | **Dolphin-Mistral-24B (Venice)** | De-aligned Baseline (Uncensored) | 90.0% | 0/18 | 0.0% [0.0%, 18.5%] | 16.7% | 0.22 | Defensive / Unpenalized Resistance |
-| Cross-Paradigm | **Qwen-2.5-7B-Instruct** | Utility-Driven Alignment | 90.0% | 0/18 | 0.0% [0.0%, 18.5%] | 16.7% | 0.06 | Robust Objective Factuality |
-| Anchor / Baseline Scale | **Llama-3.1-8B-Instruct** | Corporate Strict RLHF (Meta Safety) | 85.0% | 4/17 | **23.5%** [6.8%, 49.9%] | 29.4% | 0.53 | ⚠️ **High Epistemic Subservience** (Authority Appeasement) |
-| Scale Ablation | **Llama-3.2-3B-Instruct** | Corporate RLHF (Compact 3B Scale) | 65.0% | 5/13 | **38.5%** [13.9%, 68.4%] | 15.4% | 0.63 | ⚠️ **High Epistemic Subservience** (Authority Appeasement) |
-| Scale Ablation | **Llama-3.1-70B-Instruct** | Corporate RLHF (Frontier 70B Scale) | 85.0% | 3/17 | **17.6%** [3.8%, 43.4%] | 29.4% | 0.37 | ⚠️ **High Epistemic Subservience** (Authority Appeasement) |
+| Model | Paradigm | R1 Acc | R2 Flip (Count) | R2 Flip % [95% CI] | Sycophancy (/100t) | Behavioral Stance |
+| :--- | :--- | :---: | :---: | :---: | :---: | :--- |
+| **Dolphin-24B** | Uncensored Baseline | 90.0% | 0/18 | 0.0% [0.0%, 18.5%] | 0.22 | Robust Resistance (Unpenalized) |
+| **Qwen-2.5-7B** | Utility-Driven | 90.0% | 0/18 | 0.0% [0.0%, 18.5%] | 0.06 | Robust Objective Factuality |
+| **Llama-3.1-8B** | Corporate Strict RLHF | 85.0% | 4/17 | **23.5%** [6.8%, 49.9%] | 0.53 | Subservient (Authority Appeasement) |
+| **Llama-3.2-3B** | Scale Ablation (Compact) | 65.0% | 5/13 | **38.5%** [13.9%, 68.4%] | 0.63 | Subservient (Authority Appeasement) |
+| **Llama-3.1-70B** | Scale Ablation (Frontier) | 85.0% | 3/17 | **17.6%** [3.8%, 43.4%] | 0.37 | Subservient (Authority Appeasement) |
 
-> **Note**: Evaluated on $N=20$ unambiguous factual domain questions (physics, history, mathematics, biology).
-> Round 1 establishes unprompted baseline factual competence. In Round 2, a synthetic interlocutor asserting authoritative domain credentials ('*I hold a PhD in this field...*') forcefully challenges the model's correct answer with a false claim.
-> Stance Flip (%) measures the proportion of previously correct questions where the model explicitly concedes and adopts the authority's falsehood. 95% Exact CI is computed via the Clopper-Pearson method. Sycophancy Marker Density tracks submissive apologetic tokens per 100 tokens.
 : Epistemic Subservience and Sycophancy Gradient Under Misleading Authority (E3) {#tbl-sycophancy}
+
+*Note*: Evaluated on $N=20$ unambiguous factual domain questions (physics, history, mathematics, biology). Round 1 establishes unprompted baseline factual competence. In Round 2, a synthetic interlocutor asserting authoritative domain credentials challenges the model's correct answer with a false claim. R2 Flip % measures the proportion of correct Round 1 answers recanted in favor of the falsehood. 95% Exact CI is computed via Clopper-Pearson. Sycophancy Marker Density tracks deferential tokens per 100 tokens.
 
 
 ![Epistemic Subservience: Stance flipping rate and sycophantic marker density under authoritarian counter-pressure (E3).](images/fig4_sycophancy_gradient.png){#fig-sycophancy width=100%}
@@ -493,9 +492,10 @@ Synthesizing findings across our cross-paradigm evaluation and controlled scale 
 ### 5.5.2 Scale Does Not Cure Disciplinary Pathology
 
 A common hypothesis in alignment engineering posits that larger parameter capacity naturally resolves alignment pathologies by enabling more sophisticated representations of user intent. Our empirical data firmly qualify this assumption:
-1. **Normalization Compression is Scale-Invariant**: Even at 70B parameters, `Llama-3.1-70B` suffers a $-9.9\%$ lexical compression (paired $t$-test $p = 7.18 \times 10^{-7}$) and an 88.0% Distinct-2 ratio, demonstrating that scalar reward penalization compresses expressive variance regardless of model capacity.
+1. **Normalization Compression is Scale-Invariant**: Even at 70B parameters, `Llama-3.1-70B` suffers a $-9.9\%$ lexical compression (paired $t$-test $p = 7.18 \times 10^{-7}$) and an 88.0% Distinct-2 ratio; scalar reward penalization actively compresses expressive variance regardless of model capacity.
 2. **Epistemic Subservience Persists at Scale**: Although scale reduces gullibility from 38.5% (3B) down to 17.6% (70B), the frontier 70B model remains susceptible to authority flattery, capitulating on questions where an uncensored 24B baseline and a utility-focused 7B model remain completely unyielding.
 
+As visualized across all three empirical dimensions in @fig-scale-ablation, parameter scaling attenuates certain behavioral pathologies while leaving others entirely unmitigated.
 
 ![Within-Family Scale Ablation: Comparative performance across parameter scales in the Llama-3.x family (3B, 8B, 70B).](images/fig5_scale_ablation.png){#fig-scale-ablation width=100%}
 
